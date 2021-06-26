@@ -46,3 +46,6 @@ becomes
 
 PnL = 31224.00
 ```
+
+## References
+I kicked off from this repository, https://github.com/mluogh/pnl. 
