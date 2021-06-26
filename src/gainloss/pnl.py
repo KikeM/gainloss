@@ -37,18 +37,19 @@ class TradeManager:
             open_trades.append(trade)
             return
 
+        fifo_trade = open_trades[0]
         # If inventory exists, all trades must be same way (buy or sell)
         # If new trade is same way, again just add it
-        if open_trades[0].buying == trade.buying:
+        if fifo_trade.buying == trade.buying:
             open_trades.append(trade)
             return
 
         # Otherwise, consume the trades
         while len(open_trades) > 0 and trade.quantity > 0:
 
-            quant_traded = min(trade.quantity, open_trades[0].quantity)
+            quant_traded = min(trade.quantity, fifo_trade.quantity)
 
-            pnl = quant_traded * round(trade.price - open_trades[0].price, st.ROUNDING)
+            pnl = quant_traded * round(trade.price - fifo_trade.price, st.ROUNDING)
 
             # Invert if we shorted
             if trade.buying:
@@ -59,23 +60,25 @@ class TradeManager:
 
             # Create closed trade
             ct = ClosedTrade(
-                open_trades[0].time,
-                trade.time,
-                trade.symbol,
-                quant_traded,
-                pnl,
-                open_trades[0].buying,
-                open_trades[0].price,
-                trade.price,
+                open_time=fifo_trade.time,
+                close_time=trade.time,
+                symbol=trade.symbol,
+                quantity=quant_traded,
+                pnl=pnl,
+                bought_first=fifo_trade.buying,
+                open_price=fifo_trade.price,
+                close_price=trade.price,
+                open_fees=fifo_trade.fees,
+                close_fees=trade.fees,
             )
 
             self.closed_trades.append(ct)
 
             # Remove closed shares from the trade
             trade.quantity -= quant_traded
-            open_trades[0].quantity -= quant_traded
+            fifo_trade.quantity -= quant_traded
 
-            if open_trades[0].quantity == 0:
+            if fifo_trade.quantity == 0:
                 open_trades.popleft()
 
         # if the new trade still has quantity left over
@@ -106,11 +109,12 @@ class TradeManager:
         for time, tr in trades.iterrows():
             buying = tr[TradeNames.SIDE] == Direction.BUY
             trade = Trade(
-                time,
-                tr[TradeNames.SYMBOL],
-                buying,
-                float(tr[TradeNames.PRICE]),
-                int(tr[TradeNames.QUANTITY]),
+                time=time,
+                symbol=tr[TradeNames.SYMBOL],
+                buying=buying,
+                price=float(tr[TradeNames.PRICE]),
+                quantity=int(tr[TradeNames.QUANTITY]),
+                fees=float(tr[TradeNames.FEES]),
             )
 
             self.process_trade(trade)

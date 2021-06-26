@@ -1,4 +1,4 @@
-HEADER_CLOSED = "OPEN_TIME,CLOSE_TIME,SYMBOL,QUANTITY,PNL,OPEN_SIDE,CLOSE_SIDE,OPEN_PRICE,CLOSE_PRICE"
+HEADER_CLOSED = "Open,Close,Symbol,qty,PnL,PnL (fees),Adquisicion, Transmision, Side (E),Side (X),(E)ntry, e(X)it, Fees (E), Fees (X)"
 HEADER_CLOSED = HEADER_CLOSED.split(",")
 
 
@@ -9,6 +9,7 @@ class TradeNames:
     SIDE = "SIDE"
     BUYING = "buying"
     PRICE = "PRICE"
+    FEES = "transactionCost"
     QUANTITY = "QUANTITY"
 
 
