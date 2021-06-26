@@ -20,6 +20,7 @@ class TradeManager:
 
         self.open_trades = defaultdict(deque)
         self.closed_trades = []
+        self.trades = None
         self.pnl = 0.0
 
     def process_trade(self, trade):
@@ -98,6 +99,8 @@ class TradeManager:
         )
 
         trades = trades.sort_index(ascending=True)
+
+        self.trades = trades.copy()
 
         # Loop through each trade
         for time, tr in trades.iterrows():
