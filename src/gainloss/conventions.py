@@ -1,0 +1,18 @@
+HEADER_CLOSED = "OPEN_TIME,CLOSE_TIME,SYMBOL,QUANTITY,PNL,OPEN_SIDE,CLOSE_SIDE,OPEN_PRICE,CLOSE_PRICE"
+HEADER_CLOSED = HEADER_CLOSED.split(",")
+
+
+class TradeNames:
+
+    TIME = "TIME"
+    SYMBOL = "SYMBOL"
+    SIDE = "SIDE"
+    BUYING = "buying"
+    PRICE = "PRICE"
+    QUANTITY = "QUANTITY"
+
+
+class Direction:
+
+    BUY = "B"
+    SELL = "S"
